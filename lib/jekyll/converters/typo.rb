@@ -24,7 +24,10 @@ module Jekyll
       FileUtils.mkdir_p '_posts'
       db = Sequel.mysql dbname, :user => user, :password => pass, :host => host
       db[SQL].each do |post|
-        next unless post[:state] =~ /Published/
+        next unless post[:state] =~ /Published/i
+
+        #slugs can be null in typo5
+        post[:slug] ||= post[:title]
 
         name = [ sprintf("%.04d", post[:date].year),
                  sprintf("%.02d", post[:date].month),
